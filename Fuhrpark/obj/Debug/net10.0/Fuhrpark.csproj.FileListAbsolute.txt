@@ -1,0 +1,15 @@
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\bin\Debug\net10.0\Fuhrpark.exe
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\bin\Debug\net10.0\Fuhrpark.deps.json
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\bin\Debug\net10.0\Fuhrpark.runtimeconfig.json
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\bin\Debug\net10.0\Fuhrpark.dll
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\bin\Debug\net10.0\Fuhrpark.pdb
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\obj\Debug\net10.0\Fuhrpark.GeneratedMSBuildEditorConfig.editorconfig
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\obj\Debug\net10.0\Fuhrpark.AssemblyInfoInputs.cache
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\obj\Debug\net10.0\Fuhrpark.AssemblyInfo.cs
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\obj\Debug\net10.0\Fuhrpark.csproj.CoreCompileInputs.cache
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\obj\Debug\net10.0\Fuhrpark.sourcelink.json
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\obj\Debug\net10.0\Fuhrpark.dll
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\obj\Debug\net10.0\refint\Fuhrpark.dll
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\obj\Debug\net10.0\Fuhrpark.pdb
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\obj\Debug\net10.0\Fuhrpark.genruntimeconfig.cache
+G:\Schule\c#\jomal-Fuhrparkverwaltung\Fuhrpark\obj\Debug\net10.0\ref\Fuhrpark.dll

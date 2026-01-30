@@ -4,7 +4,6 @@ using Fuhrpark.Infrastructure.Repositories;
 using Fuhrpark.Ui;
 
 namespace Fuhrpark;
-
 internal static class Program
 {
     private static void Main()
@@ -23,11 +22,31 @@ internal static class Program
         RunMainMenu(brandService, vehicleService);
     }
 
+private static void SafeClear()
+{
+    // Wenn Output umgeleitet ist (z.B. Debug/CI/kein echtes Terminal), geht Clear oft kaputt
+    if (Console.IsOutputRedirected)
+    {
+        Console.WriteLine();
+        return;
+    }
+
+    try
+    {
+        SafeClear();
+    }
+    catch (IOException)
+    {
+        // Kein gültiger Console-Handle -> einfach nicht clearen
+        Console.WriteLine();
+    }
+}
+
     private static void RunMainMenu(BrandCatalogService brands, VehicleService vehicles)
     {
         while (true)
         {
-            Console.Clear();
+            SafeClear();
             Console.WriteLine("=== Fuhrparkverwaltung (Aufgabe 1) ===");
             Console.WriteLine("1) Stammdaten (Marken/Modelle)");
             Console.WriteLine("2) Fahrzeuge");
@@ -63,7 +82,7 @@ internal static class Program
     {
         while (true)
         {
-            Console.Clear();
+            SafeClear();
             Console.WriteLine("=== Stammdaten ===");
             Console.WriteLine("1) Marke anlegen");
             Console.WriteLine("2) Modell zu Marke hinzufügen");
@@ -134,7 +153,7 @@ internal static class Program
     {
         while (true)
         {
-            Console.Clear();
+            SafeClear();
             Console.WriteLine("=== Fahrzeuge ===");
             Console.WriteLine("1) Fahrzeug anlegen");
             Console.WriteLine("2) Fahrzeuge anzeigen");
@@ -212,7 +231,7 @@ internal static class Program
             return;
         }
 
-        Console.Clear();
+        SafeClear();
         Console.WriteLine("=== Fahrzeug anlegen ===");
         Console.WriteLine("1) PKW");
         Console.WriteLine("2) LKW");

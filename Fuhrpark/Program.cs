@@ -22,31 +22,31 @@ internal static class Program
         RunMainMenu(brandService, vehicleService);
     }
 
-private static void SafeClear()
-{
-    // Wenn Output umgeleitet ist (z.B. Debug/CI/kein echtes Terminal), geht Clear oft kaputt
-    if (Console.IsOutputRedirected)
-    {
-        Console.WriteLine();
-        return;
-    }
+//private static void SafeClear()
+//{
+//    // Wenn Output umgeleitet ist (z.B. Debug/CI/kein echtes Terminal), geht Clear oft kaputt
+//    if (Console.IsOutputRedirected)
+//    {
+//        Console.WriteLine();
+//        return;
+//    }
 
-    try
-    {
-        SafeClear();
-    }
-    catch (IOException)
-    {
-        // Kein gültiger Console-Handle -> einfach nicht clearen
-        Console.WriteLine();
-    }
-}
+//    try
+//    {
+//        Console.Clear();
+//    }
+//    catch (IOException)
+//    {
+//        // Kein gültiger Console-Handle -> einfach nicht clearen
+//        Console.WriteLine();
+//    }
+//}
 
     private static void RunMainMenu(BrandCatalogService brands, VehicleService vehicles)
     {
         while (true)
         {
-            SafeClear();
+            Console.Clear();
             Console.WriteLine("=== Fuhrparkverwaltung (Aufgabe 1) ===");
             Console.WriteLine("1) Stammdaten (Marken/Modelle)");
             Console.WriteLine("2) Fahrzeuge");
@@ -82,7 +82,7 @@ private static void SafeClear()
     {
         while (true)
         {
-            SafeClear();
+            Console.Clear();
             Console.WriteLine("=== Stammdaten ===");
             Console.WriteLine("1) Marke anlegen");
             Console.WriteLine("2) Modell zu Marke hinzufügen");
@@ -153,7 +153,7 @@ private static void SafeClear()
     {
         while (true)
         {
-            SafeClear();
+            Console.Clear();
             Console.WriteLine("=== Fahrzeuge ===");
             Console.WriteLine("1) Fahrzeug anlegen");
             Console.WriteLine("2) Fahrzeuge anzeigen");
@@ -231,7 +231,7 @@ private static void SafeClear()
             return;
         }
 
-        SafeClear();
+        Console.Clear();
         Console.WriteLine("=== Fahrzeug anlegen ===");
         Console.WriteLine("1) PKW");
         Console.WriteLine("2) LKW");

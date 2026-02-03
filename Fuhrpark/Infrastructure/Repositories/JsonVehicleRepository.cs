@@ -17,7 +17,11 @@ public sealed class JsonVehicleRepository : IVehicleRepository
     }
 
     public IReadOnlyList<Vehicle> GetAll()
-        => _vehicles.OrderBy(v => v.Brand).ThenBy(v => v.Model).ThenBy(v => v.LicensePlate).ToList();
+        => _vehicles
+            .OrderBy(v => v.Brand)
+            .ThenBy(v => v.Model)
+            .ThenBy(v => v.LicensePlate)
+            .ToList();
 
     public Vehicle? FindById(Guid id)
         => _vehicles.FirstOrDefault(v => v.Id == id);
@@ -47,6 +51,16 @@ public sealed class JsonVehicleRepository : IVehicleRepository
         return true;
     }
 
+    public void Update(Vehicle vehicle)
+    {
+        var index = _vehicles.FindIndex(v => v.Id == vehicle.Id);
+        if (index != -1)
+        {
+            _vehicles[index] = vehicle;
+            SaveInternal();
+        }
+    }
+
     private List<Vehicle> LoadInternal()
     {
         var dtos = JsonFileStore.Load(_path, new List<VehicleDto>());
@@ -57,11 +71,27 @@ public sealed class JsonVehicleRepository : IVehicleRepository
             var type = dto.Type.Trim().ToUpperInvariant();
             if (type == "PKW")
             {
-                list.Add(new Car(dto.Id, dto.LicensePlate, dto.Brand, dto.Model, dto.Year, dto.Seats ?? 5));
+                list.Add(new Car(
+                    dto.Id,
+                    dto.LicensePlate,
+                    dto.Brand,
+                    dto.Model,
+                    dto.Year,
+                    dto.Seats,
+                    dto.PurchaseValue
+                ));
             }
             else if (type == "LKW")
             {
-                list.Add(new Truck(dto.Id, dto.LicensePlate, dto.Brand, dto.Model, dto.Year, dto.MaxPayloadKg ?? 1_000m));
+                list.Add(new Truck(
+                    dto.Id,
+                    dto.LicensePlate,
+                    dto.Brand,
+                    dto.Model,
+                    dto.Year,
+                    dto.MaxPayloadKg,
+                    dto.PurchaseValue
+                ));
             }
         }
 
@@ -70,42 +100,22 @@ public sealed class JsonVehicleRepository : IVehicleRepository
 
     private void SaveInternal()
     {
-        var dtos = _vehicles.Select(v =>
+        var dtos = _vehicles.Select(v => new VehicleDto
         {
-            if (v is Car car)
-            {
-                return new VehicleDto
-                {
-                    Id = car.Id,
-                    Type = "PKW",
-                    LicensePlate = car.LicensePlate,
-                    Brand = car.Brand,
-                    Model = car.Model,
-                    Year = car.Year,
-                    Seats = car.Seats
-                };
-            }
-
-            if (v is Truck truck)
-            {
-                return new VehicleDto
-                {
-                    Id = truck.Id,
-                    Type = "LKW",
-                    LicensePlate = truck.LicensePlate,
-                    Brand = truck.Brand,
-                    Model = truck.Model,
-                    Year = truck.Year,
-                    MaxPayloadKg = truck.MaxPayloadKg
-                };
-            }
-
-            throw new InvalidOperationException("Unbekannter Vehicle-Untertyp.");
+            Id = v.Id,
+            LicensePlate = v.LicensePlate,
+            Brand = v.Brand,
+            Model = v.Model,
+            Year = v.Year,
+            Type = v is Car ? "PKW" : "LKW",
+            Seats = v is Car car ? car.Seats : 9999,
+            MaxPayloadKg = v is Truck truck ? truck.MaxPayloadKg : 9999,
+            PurchaseValue = v.PurchaseValue
         }).ToList();
 
         JsonFileStore.Save(_path, dtos);
     }
 
     private static string NormalizePlate(string plate)
-        => (plate ?? "").Trim().ToUpperInvariant();
+        => plate.Trim().ToUpperInvariant();
 }

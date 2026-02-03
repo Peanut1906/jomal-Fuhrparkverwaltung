@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "G:\\Schule\\c#\\jomal-Fuhrparkverwaltung\\Fuhrpark\\Fuhrpark.csproj": {}
+    "C:\\Users\\jwuck\\source\\repos\\Peanut1906\\jomal-Fuhrparkverwaltung\\Fuhrpark\\Fuhrpark.csproj": {}
   },
   "projects": {
-    "G:\\Schule\\c#\\jomal-Fuhrparkverwaltung\\Fuhrpark\\Fuhrpark.csproj": {
+    "C:\\Users\\jwuck\\source\\repos\\Peanut1906\\jomal-Fuhrparkverwaltung\\Fuhrpark\\Fuhrpark.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\Schule\\c#\\jomal-Fuhrparkverwaltung\\Fuhrpark\\Fuhrpark.csproj",
+        "projectUniqueName": "C:\\Users\\jwuck\\source\\repos\\Peanut1906\\jomal-Fuhrparkverwaltung\\Fuhrpark\\Fuhrpark.csproj",
         "projectName": "Fuhrpark",
-        "projectPath": "G:\\Schule\\c#\\jomal-Fuhrparkverwaltung\\Fuhrpark\\Fuhrpark.csproj",
-        "packagesPath": "C:\\Users\\klymg\\.nuget\\packages\\",
-        "outputPath": "G:\\Schule\\c#\\jomal-Fuhrparkverwaltung\\Fuhrpark\\obj\\",
+        "projectPath": "C:\\Users\\jwuck\\source\\repos\\Peanut1906\\jomal-Fuhrparkverwaltung\\Fuhrpark\\Fuhrpark.csproj",
+        "packagesPath": "C:\\Users\\jwuck\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jwuck\\source\\repos\\Peanut1906\\jomal-Fuhrparkverwaltung\\Fuhrpark\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\klymg\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\jwuck\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

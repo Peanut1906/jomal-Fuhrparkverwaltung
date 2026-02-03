@@ -12,4 +12,6 @@ public interface IVehicleRepository
 
     void Add(Vehicle vehicle);
     bool Remove(Guid id);
+
+    void Update(Vehicle vehicle);
 }

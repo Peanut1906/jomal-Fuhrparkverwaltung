@@ -5,5 +5,12 @@
     "firstName": "Klym",
     "lastName": "Gorin",
     "companyName": null
+  },
+  {
+    "id": "2c5ae90e-8371-4f39-ae56-1e4db997150c",
+    "type": "person",
+    "firstName": "John",
+    "lastName": "Wuckert",
+    "companyName": null
   }
 ]

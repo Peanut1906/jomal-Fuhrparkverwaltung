@@ -11,9 +11,16 @@ public abstract class Vehicle
     public string Model { get; }
     public int Year { get; }
 
+    public decimal PurchaseValue { get; }
+    public decimal ResidualValue { get; private set; }
+
+    private readonly List<DepreciationEntry> _depreciations = new();
+    public IReadOnlyList<DepreciationEntry> Depreciations => _depreciations;
+
+
     public abstract VehicleType Type { get; }
 
-    protected Vehicle(Guid id, string licensePlate, string brand, string model, int year)
+    protected Vehicle(Guid id, string licensePlate, string brand, string model, int year, decimal purchaseValue)
     {
         Id = id == Guid.Empty ? Guid.NewGuid() : id;
 
@@ -23,7 +30,21 @@ public abstract class Vehicle
         Brand = Guard.NotNullOrWhiteSpace(brand, nameof(brand));
         Model = Guard.NotNullOrWhiteSpace(model, nameof(model));
 
+        PurchaseValue = purchaseValue;
+        ResidualValue = purchaseValue;
+
         Year = Guard.InRange(year, 1950, DateTime.UtcNow.Year + 1, nameof(year));
+    }
+
+    public void AddDepreciation(decimal amount, string reason, DateTime? date = null)
+    {
+        if (amount > ResidualValue)
+            throw new InvalidOperationException("Abschreibung übersteigt Restbuchwert.");
+
+        var entry = new DepreciationEntry(date ?? DateTime.Today, amount, reason);
+        _depreciations.Add(entry);
+
+        ResidualValue -= amount;
     }
 
     public override string ToString()

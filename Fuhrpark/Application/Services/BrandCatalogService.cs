@@ -31,6 +31,20 @@ public sealed class BrandCatalogService
             .ToList();
     }
 
+    public bool TryAddBrand(string brandName)
+    {
+        var added = _catalog.TryAddBrand(brandName);
+        if (added) _repo.Save(_catalog);
+        return added;
+    }
+
+    public bool TryAddModel(string brandName, string modelName)
+    {
+        var added = _catalog.TryAddModel(brandName, modelName);
+        if (added) _repo.Save(_catalog);
+        return added;
+    }
+
     public bool RemoveBrand(string brandName)
     {
         var removed = _catalog.RemoveBrand(brandName);

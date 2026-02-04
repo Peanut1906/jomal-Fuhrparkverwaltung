@@ -9,5 +9,16 @@
     "PurchaseValue": 423,
     "Seats": 3,
     "MaxPayloadKg": 9999
+  },
+  {
+    "Id": "d150bfc0-4f4b-431e-9a8f-fbaace2631b6",
+    "Type": "PKW",
+    "LicensePlate": "S4545K",
+    "Brand": "Toyota",
+    "Model": "Rav4",
+    "Year": 1964,
+    "PurchaseValue": 35000,
+    "Seats": 5,
+    "MaxPayloadKg": 9999
   }
 ]

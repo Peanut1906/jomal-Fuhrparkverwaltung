@@ -101,8 +101,10 @@ internal static class Program
                         var brandName = ConsoleInput.ReadRequiredOrBack("Marke");
                         if (brandName == null) break;
 
-                        brands.AddBrand(brandName);
-                        PrintSuccess("Marke gespeichert.");
+                        var added = brands.TryAddBrand(brandName);
+                        if (!added) PrintInfo("Marke existiert bereits.");
+                        else PrintSuccess("Marke gespeichert.");
+
                         break;
                     }
 
@@ -121,8 +123,10 @@ internal static class Program
                         var modelName = ConsoleInput.ReadRequiredOrBack("Modell");
                         if (modelName == null) break;
 
-                        brands.AddModel(brandsList[bIdx.Value], modelName);
-                        PrintSuccess("Modell gespeichert.");
+                        var added = brands.TryAddModel(brandsList[bIdx.Value], modelName);
+                        if (!added) PrintInfo("Modell existiert bereits.");
+                        else PrintSuccess("Modell gespeichert.");
+
                         break;
                     }
 
@@ -294,7 +298,6 @@ internal static class Program
         if (brandList.Count == 0)
         {
             PrintInfo("Keine Stammdaten vorhanden. Bitte zuerst Marken/Modelle anlegen.");
-            ConsoleInput.Pause();
             return;
         }
 
@@ -313,7 +316,6 @@ internal static class Program
         if (modelList.Count == 0)
         {
             PrintInfo("Diese Marke hat keine Modelle. Bitte zuerst Modelle hinzufügen.");
-            ConsoleInput.Pause();
             return;
         }
 
@@ -346,7 +348,6 @@ internal static class Program
         }
 
         PrintSuccess("Fahrzeug gespeichert.");
-        ConsoleInput.Pause();
     }
 
     private static void BookDepreciation(VehicleService vehicles)

@@ -32,6 +32,32 @@ public sealed class BrandCatalog
         return brand.RemoveModel(m);
     }
 
+    public bool TryAddBrand(string brandName)
+    {
+        var b = Guard.NotNullOrWhiteSpace(brandName, nameof(brandName));
+
+        if (_brands.ContainsKey(b))
+            return false; // existiert schon
+
+        _brands[b] = new Brand(b);
+        return true;
+    }
+
+    public bool TryAddModel(string brandName, string modelName)
+    {
+        var b = Guard.NotNullOrWhiteSpace(brandName, nameof(brandName));
+        var m = Guard.NotNullOrWhiteSpace(modelName, nameof(modelName));
+
+        if (!_brands.TryGetValue(b, out var brand))
+        {
+            // falls du irgendwann Modelle ohne vorherige Marke zulassen willst
+            brand = new Brand(b);
+            _brands[b] = brand;
+        }
+
+        return brand.TryAddModel(m); // true neu, false existiert
+    }
+
     public void AddModel(string brandName, string modelName)
     {
         var b = Guard.NotNullOrWhiteSpace(brandName, nameof(brandName));

@@ -20,6 +20,12 @@ public sealed class Brand
         }
     }
 
+    public bool RemoveModel(string modelName)
+    {
+        var m = Guard.NotNullOrWhiteSpace(modelName, nameof(modelName));
+        return _models.Remove(m);
+    }
+
     public void AddModel(string modelName)
     {
         var m = Guard.NotNullOrWhiteSpace(modelName, nameof(modelName));

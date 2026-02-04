@@ -15,6 +15,23 @@ public sealed class BrandCatalog
             _brands[b] = new Brand(b);
     }
 
+    public bool RemoveBrand(string brandName)
+    {
+        var b = Guard.NotNullOrWhiteSpace(brandName, nameof(brandName));
+        return _brands.Remove(b);
+    }
+
+    public bool RemoveModel(string brandName, string modelName)
+    {
+        var b = Guard.NotNullOrWhiteSpace(brandName, nameof(brandName));
+        var m = Guard.NotNullOrWhiteSpace(modelName, nameof(modelName));
+
+        if (!_brands.TryGetValue(b, out var brand))
+            return false;
+
+        return brand.RemoveModel(m);
+    }
+
     public void AddModel(string brandName, string modelName)
     {
         var b = Guard.NotNullOrWhiteSpace(brandName, nameof(brandName));

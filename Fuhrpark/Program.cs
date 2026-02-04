@@ -63,7 +63,7 @@ internal static class Program
 			{
 				switch (choice)
 				{
-					case 1: RunMasterDataMenu(brands); break;
+					case 1: RunMasterDataMenu(brands, vehicles); break;
 					case 2: RunVehicleMenu(brands, vehicles); break;
 					case 3: RunTripLogMenu(users, vehicles, trips); break;
 					case 0: return;
@@ -76,7 +76,7 @@ internal static class Program
 		}
 	}
 
-    private static void RunMasterDataMenu(BrandCatalogService brands)
+    private static void RunMasterDataMenu(BrandCatalogService brands, VehicleService vehicles)
     {
         while (true)
         {
@@ -86,10 +86,12 @@ internal static class Program
             Console.WriteLine("1) Marke anlegen");
             Console.WriteLine("2) Modell zu Marke hinzufügen");
             Console.WriteLine("3) Marken/Modelle anzeigen");
+            Console.WriteLine("4) Marke löschen");
+            Console.WriteLine("5) Modell löschen");
             Console.WriteLine("0) Zurück");
             PrintSeparator();
 
-            var choice = ConsoleInput.ReadInt("Auswahl", 0, 3);
+            var choice = ConsoleInput.ReadInt("Auswahl", 0, 5);
             if (choice == 0) return;
 
             switch (choice)
@@ -97,7 +99,7 @@ internal static class Program
                 case 1:
                     {
                         var brandName = ConsoleInput.ReadRequiredOrBack("Marke");
-                        if (brandName == null) break; // zurück ins Stammdaten-Menü
+                        if (brandName == null) break;
 
                         brands.AddBrand(brandName);
                         PrintSuccess("Marke gespeichert.");
@@ -135,6 +137,81 @@ internal static class Program
                             foreach (var m in brands.GetModels(b))
                                 Console.WriteLine($"   • {m}");
                         }
+                        ConsoleInput.Pause();
+                        break;
+                    }
+
+                case 4: // Marke löschen
+                    {
+                        var brandsList = brands.GetBrands();
+                        if (brandsList.Count == 0)
+                        {
+                            PrintInfo("Keine Marken vorhanden.");
+                            break;
+                        }
+
+                        var bIdx = ConsoleInput.ChooseFromListOrBack("Marke löschen – auswählen:", brandsList);
+                        if (bIdx == null) break;
+
+                        var brandName = brandsList[bIdx.Value];
+
+                        // Schutz: Marke wird noch von Fahrzeugen genutzt?
+                        var used = vehicles.GetAll().Any(v =>
+                            string.Equals(v.Brand, brandName, StringComparison.OrdinalIgnoreCase));
+
+                        if (used)
+                        {
+                            PrintInfo($"Marke '{brandName}' kann nicht gelöscht werden: Es existieren noch Fahrzeuge mit dieser Marke.");
+                            ConsoleInput.Pause();
+                            break;
+                        }
+
+                        var ok = brands.RemoveBrand(brandName);
+                        PrintSuccess(ok ? $"Marke '{brandName}' gelöscht." : "Marke konnte nicht gelöscht werden.");
+                        ConsoleInput.Pause();
+                        break;
+                    }
+
+                case 5: // Modell löschen
+                    {
+                        var brandsList = brands.GetBrands();
+                        if (brandsList.Count == 0)
+                        {
+                            PrintInfo("Keine Marken vorhanden.");
+                            break;
+                        }
+
+                        var bIdx = ConsoleInput.ChooseFromListOrBack("Marke auswählen (Modell löschen):", brandsList);
+                        if (bIdx == null) break;
+
+                        var brandName = brandsList[bIdx.Value];
+
+                        var modelList = brands.GetModels(brandName);
+                        if (modelList.Count == 0)
+                        {
+                            PrintInfo("Diese Marke hat keine Modelle.");
+                            break;
+                        }
+
+                        var mIdx = ConsoleInput.ChooseFromListOrBack("Modell löschen – auswählen:", modelList);
+                        if (mIdx == null) break;
+
+                        var modelName = modelList[mIdx.Value];
+
+                        // Schutz: Modell wird noch von Fahrzeugen genutzt?
+                        var used = vehicles.GetAll().Any(v =>
+                            string.Equals(v.Brand, brandName, StringComparison.OrdinalIgnoreCase) &&
+                            string.Equals(v.Model, modelName, StringComparison.OrdinalIgnoreCase));
+
+                        if (used)
+                        {
+                            PrintInfo($"Modell '{brandName} {modelName}' kann nicht gelöscht werden: Es existieren noch Fahrzeuge mit diesem Modell.");
+                            ConsoleInput.Pause();
+                            break;
+                        }
+
+                        var ok = brands.RemoveModel(brandName, modelName);
+                        PrintSuccess(ok ? $"Modell '{brandName} {modelName}' gelöscht." : "Modell konnte nicht gelöscht werden.");
                         ConsoleInput.Pause();
                         break;
                     }

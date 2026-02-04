@@ -1,28 +1,7 @@
 [
   {
-    "Name": "Audi",
-    "Models": [
-      "E-tron"
-    ]
-  },
-  {
-    "Name": "Opel",
-    "Models": [
-      "Astra"
-    ]
-  },
-  {
-    "Name": "Test",
-    "Models": []
-  },
-  {
-    "Name": "teste",
-    "Models": []
-  },
-  {
     "Name": "Toyota",
     "Models": [
-      "Prius",
       "Rav4"
     ]
   }

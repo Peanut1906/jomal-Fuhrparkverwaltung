@@ -6,6 +6,12 @@
     ]
   },
   {
+    "Name": "Opel",
+    "Models": [
+      "Astra"
+    ]
+  },
+  {
     "Name": "Test",
     "Models": []
   },

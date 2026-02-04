@@ -190,21 +190,27 @@ internal static class Program
 		ConsoleInput.Pause();
 	}
 
-	private static void DeleteVehicle(VehicleService vehicles)
-	{
-		var all = vehicles.GetAll();
-		if (all.Count == 0)
-		{
-			PrintInfo("Keine Fahrzeuge vorhanden.");
-			return;
-		}
+    private static void DeleteVehicle(VehicleService vehicles)
+    {
+        var all = vehicles.GetAll();
+        if (all.Count == 0)
+        {
+            PrintInfo("Keine Fahrzeuge vorhanden.");
+            ConsoleInput.Pause();
+            return;
+        }
 
-		var display = all.Select(v => $"{v.LicensePlate,-10} | {v.Brand} {v.Model}").ToList();
-		var idx = ConsoleInput.ChooseFromList("Fahrzeug auswählen:", display);
+        var display = all
+            .Select(v => $"{v.LicensePlate,-10} | {v.Brand} {v.Model}")
+            .ToList();
 
-		vehicles.RemoveVehicle(all[idx].Id);
-		PrintSuccess("Fahrzeug gelöscht.");
-	}
+        var idx = ConsoleInput.ChooseFromListOrBack("Fahrzeug auswählen:", display);
+        if (idx == null) return; // <-- jederzeit raus
+
+        vehicles.RemoveVehicle(all[idx.Value].Id);
+        PrintSuccess("Fahrzeug gelöscht.");
+        ConsoleInput.Pause();
+    }
 
     private static void CreateVehicle(BrandCatalogService brands, VehicleService vehicles)
     {

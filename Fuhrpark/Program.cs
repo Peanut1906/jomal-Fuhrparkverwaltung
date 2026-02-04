@@ -162,13 +162,11 @@ internal static class Program
                         if (used)
                         {
                             PrintInfo($"Marke '{brandName}' kann nicht gelöscht werden: Es existieren noch Fahrzeuge mit dieser Marke.");
-                            ConsoleInput.Pause();
                             break;
                         }
 
                         var ok = brands.RemoveBrand(brandName);
                         PrintSuccess(ok ? $"Marke '{brandName}' gelöscht." : "Marke konnte nicht gelöscht werden.");
-                        ConsoleInput.Pause();
                         break;
                     }
 
@@ -206,13 +204,11 @@ internal static class Program
                         if (used)
                         {
                             PrintInfo($"Modell '{brandName} {modelName}' kann nicht gelöscht werden: Es existieren noch Fahrzeuge mit diesem Modell.");
-                            ConsoleInput.Pause();
                             break;
                         }
 
                         var ok = brands.RemoveModel(brandName, modelName);
                         PrintSuccess(ok ? $"Modell '{brandName} {modelName}' gelöscht." : "Modell konnte nicht gelöscht werden.");
-                        ConsoleInput.Pause();
                         break;
                     }
             }

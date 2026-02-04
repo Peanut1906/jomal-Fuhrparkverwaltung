@@ -76,59 +76,73 @@ internal static class Program
 		}
 	}
 
-	private static void RunMasterDataMenu(BrandCatalogService brands)
-	{
-		while (true)
-		{
-			Console.Clear();
-			PrintHeader("Stammdaten");
+    private static void RunMasterDataMenu(BrandCatalogService brands)
+    {
+        while (true)
+        {
+            Console.Clear();
+            PrintHeader("Stammdaten");
 
-			Console.WriteLine("1) Marke anlegen");
-			Console.WriteLine("2) Modell zu Marke hinzufügen");
-			Console.WriteLine("3) Marken/Modelle anzeigen");
-			Console.WriteLine("0) Zurück");
-			PrintSeparator();
+            Console.WriteLine("1) Marke anlegen");
+            Console.WriteLine("2) Modell zu Marke hinzufügen");
+            Console.WriteLine("3) Marken/Modelle anzeigen");
+            Console.WriteLine("0) Zurück");
+            PrintSeparator();
 
-			var choice = ConsoleInput.ReadInt("Auswahl", 0, 3);
-			if (choice == 0) return;
+            var choice = ConsoleInput.ReadInt("Auswahl", 0, 3);
+            if (choice == 0) return;
 
-			switch (choice)
-			{
-				case 1:
-					brands.AddBrand(ConsoleInput.ReadRequired("Marke"));
-					PrintSuccess("Marke gespeichert.");
-					break;
+            switch (choice)
+            {
+                case 1:
+                    {
+                        var brandName = ConsoleInput.ReadRequiredOrBack("Marke");
+                        if (brandName == null) break; // zurück ins Stammdaten-Menü
 
-				case 2:
-					var brandsList = brands.GetBrands();
-					if (brandsList.Count == 0)
-					{
-						PrintInfo("Noch keine Marken vorhanden.");
-						break;
-					}
+                        brands.AddBrand(brandName);
+                        PrintSuccess("Marke gespeichert.");
+                        break;
+                    }
 
-					var bIdx = ConsoleInput.ChooseFromList("Marke auswählen:", brandsList);
-					brands.AddModel(brandsList[bIdx], ConsoleInput.ReadRequired("Modell"));
-					PrintSuccess("Modell gespeichert.");
-					break;
+                case 2:
+                    {
+                        var brandsList = brands.GetBrands();
+                        if (brandsList.Count == 0)
+                        {
+                            PrintInfo("Noch keine Marken vorhanden.");
+                            break;
+                        }
 
-				case 3:
-					Console.WriteLine();
-					foreach (var b in brands.GetBrands())
-					{
-						Console.ForegroundColor = ConsoleColor.Cyan;
-						Console.WriteLine($"- {b}");
-						Console.ResetColor();
-						foreach (var m in brands.GetModels(b))
-							Console.WriteLine($"   • {m}");
-					}
-					ConsoleInput.Pause();
-					break;
-			}
-		}
-	}
+                        var bIdx = ConsoleInput.ChooseFromListOrBack("Marke auswählen:", brandsList);
+                        if (bIdx == null) break;
 
-	private static void RunVehicleMenu(BrandCatalogService brands, VehicleService vehicles)
+                        var modelName = ConsoleInput.ReadRequiredOrBack("Modell");
+                        if (modelName == null) break;
+
+                        brands.AddModel(brandsList[bIdx.Value], modelName);
+                        PrintSuccess("Modell gespeichert.");
+                        break;
+                    }
+
+                case 3:
+                    {
+                        Console.WriteLine();
+                        foreach (var b in brands.GetBrands())
+                        {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.WriteLine($"- {b}");
+                            Console.ResetColor();
+                            foreach (var m in brands.GetModels(b))
+                                Console.WriteLine($"   • {m}");
+                        }
+                        ConsoleInput.Pause();
+                        break;
+                    }
+            }
+        }
+    }
+
+    private static void RunVehicleMenu(BrandCatalogService brands, VehicleService vehicles)
 	{
 		while (true)
 		{
@@ -192,44 +206,71 @@ internal static class Program
 		PrintSuccess("Fahrzeug gelöscht.");
 	}
 
-	private static void CreateVehicle(BrandCatalogService brands, VehicleService vehicles)
-	{
-		Console.Clear();
-		PrintHeader("Fahrzeug anlegen");
+    private static void CreateVehicle(BrandCatalogService brands, VehicleService vehicles)
+    {
+        Console.Clear();
+        PrintHeader("Fahrzeug anlegen");
 
-		Console.WriteLine("1) PKW");
-		Console.WriteLine("2) LKW");
-		PrintSeparator();
+        var brandList = brands.GetBrands();
+        if (brandList.Count == 0)
+        {
+            PrintInfo("Keine Stammdaten vorhanden. Bitte zuerst Marken/Modelle anlegen.");
+            ConsoleInput.Pause();
+            return;
+        }
 
-		var type = ConsoleInput.ReadInt("Typ", 1, 2);
+        Console.WriteLine("1) PKW");
+        Console.WriteLine("2) LKW");
+        PrintSeparator();
 
-		var brandList = brands.GetBrands();
-		var brandName = brandList[ConsoleInput.ChooseFromList("Marke:", brandList)];
+        var type = ConsoleInput.ReadIntOrBack("Typ", 1, 2);
+        if (type == null) return;
 
-		var modelList = brands.GetModels(brandName);
-		var modelName = modelList[ConsoleInput.ChooseFromList("Modell:", modelList)];
+        var brandIdx = ConsoleInput.ChooseFromListOrBack("Marke:", brandList);
+        if (brandIdx == null) return;
+        var brandName = brandList[brandIdx.Value];
 
-		var plate = ConsoleInput.ReadRequired("Kennzeichen");
-		var year = ConsoleInput.ReadInt("Baujahr", 1950, DateTime.UtcNow.Year + 1);
+        var modelList = brands.GetModels(brandName);
+        if (modelList.Count == 0)
+        {
+            PrintInfo("Diese Marke hat keine Modelle. Bitte zuerst Modelle hinzufügen.");
+            ConsoleInput.Pause();
+            return;
+        }
 
-		// wichtig: Anschaffungswert!
-		var purchaseValue = ConsoleInput.ReadDecimal("Anschaffungswert (€)", 1m, 10_000_000m);
+        var modelIdx = ConsoleInput.ChooseFromListOrBack("Modell:", modelList);
+        if (modelIdx == null) return;
+        var modelName = modelList[modelIdx.Value];
 
-		if (type == 1)
-		{
-			var seats = ConsoleInput.ReadInt("Sitzplätze", 1, 9);
-			vehicles.AddCar(plate, brandName, modelName, year, seats, purchaseValue);
-		}
-		else
-		{
-			var payload = ConsoleInput.ReadDecimal("Max. Zuladung (kg)", 0.1m, 100_000m);
-			vehicles.AddTruck(plate, brandName, modelName, year, payload, purchaseValue);
-		}
+        var plate = ConsoleInput.ReadRequiredOrBack("Kennzeichen");
+        if (plate == null) return;
 
-		PrintSuccess("Fahrzeug gespeichert.");
-	}
+        var year = ConsoleInput.ReadIntOrBack("Baujahr", 1950, DateTime.UtcNow.Year + 1);
+        if (year == null) return;
 
-	private static void BookDepreciation(VehicleService vehicles)
+        var purchaseValue = ConsoleInput.ReadDecimalOrBack("Anschaffungswert (€)", 1m, 10_000_000m);
+        if (purchaseValue == null) return;
+
+        if (type.Value == 1)
+        {
+            var seats = ConsoleInput.ReadIntOrBack("Sitzplätze", 1, 9);
+            if (seats == null) return;
+
+            vehicles.AddCar(plate, brandName, modelName, year.Value, seats.Value, purchaseValue.Value);
+        }
+        else
+        {
+            var payload = ConsoleInput.ReadDecimalOrBack("Max. Zuladung (kg)", 0.1m, 100_000m);
+            if (payload == null) return;
+
+            vehicles.AddTruck(plate, brandName, modelName, year.Value, payload.Value, purchaseValue.Value);
+        }
+
+        PrintSuccess("Fahrzeug gespeichert.");
+        ConsoleInput.Pause();
+    }
+
+    private static void BookDepreciation(VehicleService vehicles)
 	{
 		var all = vehicles.GetAll();
 		if (all.Count == 0)

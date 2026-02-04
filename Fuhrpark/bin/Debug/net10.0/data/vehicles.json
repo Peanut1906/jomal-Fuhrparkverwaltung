@@ -1,13 +1,13 @@
 [
   {
-    "Id": "2359ce9b-54a5-482c-9791-9a12b572e822",
+    "Id": "4e517b3e-f21a-42cf-9fdb-7cee5b51f362",
     "Type": "PKW",
-    "LicensePlate": "WN JW 777",
+    "LicensePlate": "543",
     "Brand": "Toyota",
-    "Model": "Prius",
-    "Year": 2013,
-    "PurchaseValue": 17000,
-    "Seats": 5,
+    "Model": "Rav4",
+    "Year": 1960,
+    "PurchaseValue": 423,
+    "Seats": 3,
     "MaxPayloadKg": 9999
   }
 ]

@@ -5,6 +5,7 @@ using Fuhrpark.Application.Services;
 using Fuhrpark.Domain.Exceptions;
 using Fuhrpark.Infrastructure.Repositories;
 using Fuhrpark.Ui;
+using Fuhrpark.Domain.Enums;
 
 namespace Fuhrpark;
 
@@ -252,20 +253,48 @@ internal static class Program
 		}
 	}
 
-	private static void DisplayVehicles(VehicleService vehicles)
-	{
-		var all = vehicles.GetAll();
-		if (all.Count == 0)
-		{
-			PrintInfo("Keine Fahrzeuge vorhanden.");
-			return;
-		}
+    private static void DisplayVehicles(VehicleService vehicles)
+    {
+        var all = vehicles.GetAll();
+        if (all.Count == 0)
+        {
+            PrintInfo("Keine Fahrzeuge vorhanden.");
+            return;
+        }
 
-		Console.WriteLine();
-		foreach (var v in all)
-			Console.WriteLine(v);
-		ConsoleInput.Pause();
-	}
+        // Dynamische Spaltenbreiten
+        var typeW = 3; // "PKW"/"LKW"
+        var brandModelW = Math.Max("Marke/Modell".Length, all.Max(v => $"{v.Brand} {v.Model}".Length));
+        var plateW = Math.Max("Kennzeichen".Length, all.Max(v => v.LicensePlate.Length));
+        var idW = 8;
+
+        static string TypeLabel(Fuhrpark.Domain.Entities.Vehicle v)
+            => v.Type == VehicleType.Car ? "PKW" : "LKW";
+
+        Console.WriteLine();
+        Console.WriteLine(
+            $"{"Typ".PadRight(typeW)} | " +
+            $"{"Marke/Modell".PadRight(brandModelW)} | " +
+            $"{"Kennzeichen".PadRight(plateW)} | " +
+            $"Bj.  | Id");
+
+        Console.WriteLine(new string('-', typeW + brandModelW + plateW + idW + 13));
+
+        foreach (var v in all)
+        {
+            var brandModel = $"{v.Brand} {v.Model}";
+            var idShort = v.Id.ToString("N")[..8];
+
+            Console.WriteLine(
+                $"{TypeLabel(v).PadRight(typeW)} | " +
+                $"{brandModel.PadRight(brandModelW)} | " +
+                $"{v.LicensePlate.PadRight(plateW)} | " +
+                $"{v.Year,4} | " +
+                $"{idShort}");
+        }
+
+        ConsoleInput.Pause();
+    }
 
     private static void DeleteVehicle(VehicleService vehicles)
     {
@@ -286,7 +315,6 @@ internal static class Program
 
         vehicles.RemoveVehicle(all[idx.Value].Id);
         PrintSuccess("Fahrzeug gelöscht.");
-        ConsoleInput.Pause();
     }
 
     private static void CreateVehicle(BrandCatalogService brands, VehicleService vehicles)

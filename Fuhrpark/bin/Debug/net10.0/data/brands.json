@@ -1,13 +1,29 @@
 [
   {
-    "Name": "audi",
+    "Name": "Audi",
     "Models": [
-      "etron"
+      "RS-3",
+      "RS-6"
+    ]
+  },
+  {
+    "Name": "Mercedes",
+    "Models": [
+      "S 580"
+    ]
+  },
+  {
+    "Name": "Nissan",
+    "Models": [
+      "R34",
+      "R35"
     ]
   },
   {
     "Name": "Opel",
-    "Models": []
+    "Models": [
+      "Astra"
+    ]
   },
   {
     "Name": "Toyota",

@@ -20,5 +20,38 @@
     "PurchaseValue": 35000,
     "Seats": 5,
     "MaxPayloadKg": 9999
+  },
+  {
+    "Id": "2947c65b-c155-434f-9e17-e70eba6d0508",
+    "Type": "PKW",
+    "LicensePlate": "S7777K",
+    "Brand": "Audi",
+    "Model": "RS-6",
+    "Year": 2018,
+    "PurchaseValue": 210000,
+    "Seats": 5,
+    "MaxPayloadKg": 9999
+  },
+  {
+    "Id": "298f2c6f-a16e-478d-b8f8-82b3097ffc19",
+    "Type": "PKW",
+    "LicensePlate": "S-PY 5492",
+    "Brand": "Mercedes",
+    "Model": "S 580",
+    "Year": 2025,
+    "PurchaseValue": 133928,
+    "Seats": 5,
+    "MaxPayloadKg": 9999
+  },
+  {
+    "Id": "d50fe3db-5a32-4089-90ff-3ed8a481da50",
+    "Type": "PKW",
+    "LicensePlate": "S-DK 2057",
+    "Brand": "Mercedes",
+    "Model": "S 580",
+    "Year": 2022,
+    "PurchaseValue": 145000,
+    "Seats": 5,
+    "MaxPayloadKg": 9999
   }
 ]

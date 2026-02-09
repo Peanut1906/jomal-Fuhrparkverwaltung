@@ -1,6 +1,7 @@
 using Fuhrpark.Application.Interfaces;
 using Fuhrpark.Domain.Entities;
 using Fuhrpark.Domain.Exceptions;
+using Fuhrpark.Domain.Enums;
 
 namespace Fuhrpark.Application.Services;
 
@@ -87,4 +88,37 @@ public sealed class VehicleService
 
     public bool RemoveVehicle(Guid id)
         => _vehicles.Remove(id);
+    public void AddRepair(Guid vehicleId, DateOnly date, string description, RepairType type, decimal cost, string workshop)
+    {
+        var vehicle = _vehicles.FindById(vehicleId);
+        if (vehicle == null)
+            throw new DomainValidationException("Fahrzeug nicht gefunden.");
+
+        vehicle.AddRepair(date, description, type, cost, workshop);
+        _vehicles.Update(vehicle);
+    }
+
+    public void RemoveRepair(Guid vehicleId, Guid repairId)
+    {
+        var vehicle = _vehicles.FindById(vehicleId);
+        if (vehicle == null)
+            throw new DomainValidationException("Fahrzeug nicht gefunden.");
+
+        vehicle.RemoveRepair(repairId);
+        _vehicles.Update(vehicle);
+    }
+
+    public decimal GetTotalRepairCost(Guid vehicleId)
+    {
+        var vehicle = _vehicles.FindById(vehicleId);
+        if (vehicle == null)
+            throw new DomainValidationException("Fahrzeug nicht gefunden.");
+
+        return vehicle.GetTotalRepairCost();
+    }
+
+    public decimal GetFleetRepairCost()
+    {
+        return _vehicles.GetAll().Sum(v => v.GetTotalRepairCost());
+    }
 }

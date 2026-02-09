@@ -27,4 +27,10 @@ public static class Guard
 
         return value;
     }
+    public static decimal GreaterThanZero(decimal value, string paramName)
+    {
+        if (value <= 0)
+            throw new ArgumentException($"{paramName} muss größer als 0 sein.", paramName);
+        return value;
+    }
 }

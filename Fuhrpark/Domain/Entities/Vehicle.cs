@@ -16,6 +16,9 @@ public abstract class Vehicle
 
     private readonly List<DepreciationEntry> _depreciations = new();
     public IReadOnlyList<DepreciationEntry> Depreciations => _depreciations;
+    // Reparaturbuch
+    private readonly List<Repair> _repairs = new();
+    public IReadOnlyList<Repair> Repairs => _repairs;
 
 
     public abstract VehicleType Type { get; }
@@ -46,6 +49,24 @@ public abstract class Vehicle
 
         ResidualValue -= amount;
     }
+
+    //Fügt dem Fahrzeug eine neue Reparatur mit allen relevanten Informationen hinzu
+    public void AddRepair(DateOnly date, string description, RepairType type, decimal cost, string workshop)
+    {
+        var repair = new Repair(Guid.NewGuid(), date, description, type, cost, workshop);
+        _repairs.Add(repair);
+    }
+
+    // Entfernt eine Reparatur anhand ihrer eindeutigen Id
+    public void RemoveRepair(Guid repairId)
+    {
+        var repair = _repairs.FirstOrDefault(r => r.Id == repairId);
+        if (repair != null)
+            _repairs.Remove(repair);
+    }
+
+    public decimal GetTotalRepairCost()
+        => _repairs.Sum(r => r.Cost);
 
     public override string ToString()
         => $"{TypeToDisplay(Type),-3} | {Brand} {Model,-20} | {LicensePlate,-12} | Bj. {Year} | Id: {Id.ToString()[..8]}";

@@ -75,7 +75,6 @@ public sealed class JsonUserRepository : IUserRepository
 				}
 				catch
 				{
-					// kaputten Eintrag ignorieren
 				}
 			}
 

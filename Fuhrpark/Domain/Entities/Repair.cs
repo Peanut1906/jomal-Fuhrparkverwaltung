@@ -27,7 +27,6 @@ public class Repair
     public override string ToString()
         => $"{Date:dd.MM.yyyy} | {TypeToDisplay(Type),-15} | {Cost,10:C} | {Description,-30} | {Workshop} | Id: {Id.ToString()[..8]}";
 
-    // Wandelt den Reparaturtyp in eine verständliche Textdarstellung um
     private static string TypeToDisplay(RepairType type)
         => type switch
         {

@@ -37,7 +37,7 @@ public sealed class BrandCatalog
         var b = Guard.NotNullOrWhiteSpace(brandName, nameof(brandName));
 
         if (_brands.ContainsKey(b))
-            return false; // existiert schon
+            return false;
 
         _brands[b] = new Brand(b);
         return true;
@@ -50,12 +50,11 @@ public sealed class BrandCatalog
 
         if (!_brands.TryGetValue(b, out var brand))
         {
-            // falls du irgendwann Modelle ohne vorherige Marke zulassen willst
             brand = new Brand(b);
             _brands[b] = brand;
         }
 
-        return brand.TryAddModel(m); // true neu, false existiert
+        return brand.TryAddModel(m);
     }
 
     public void AddModel(string brandName, string modelName)

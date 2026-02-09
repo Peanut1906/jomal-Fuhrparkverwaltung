@@ -11,7 +11,6 @@ namespace Fuhrpark;
 
 internal static class Program
 {
-    // Option D: "Letzte Auswahl merken"
     private static Guid? _lastTripUserId;
     private static Guid? _lastTripVehicleId;
     private static string? _lastTripReason;
@@ -23,7 +22,6 @@ internal static class Program
         var brandsPath = Path.Combine(dataDir, "brands.json");
         var vehiclesPath = Path.Combine(dataDir, "vehicles.json");
 
-        // Fahrtenbuch
         var usersPath = Path.Combine(dataDir, "users.json");
         var tripsPath = Path.Combine(dataDir, "trips.json");
 
@@ -161,7 +159,6 @@ internal static class Program
 
                         var brandName = brandsList[bIdx.Value];
 
-                        // Schutz: Marke wird noch von Fahrzeugen genutzt?
                         var used = vehicles.GetAll().Any(v =>
                             string.Equals(v.Brand, brandName, StringComparison.OrdinalIgnoreCase));
 
@@ -202,7 +199,6 @@ internal static class Program
 
                         var modelName = modelList[mIdx.Value];
 
-                        // Schutz: Modell wird noch von Fahrzeugen genutzt?
                         var used = vehicles.GetAll().Any(v =>
                             string.Equals(v.Brand, brandName, StringComparison.OrdinalIgnoreCase) &&
                             string.Equals(v.Model, modelName, StringComparison.OrdinalIgnoreCase));
@@ -290,7 +286,7 @@ internal static class Program
             .ToList();
 
         var idx = ConsoleInput.ChooseFromListOrBack("Fahrzeug auswählen:", display);
-        if (idx == null) return; // <-- jederzeit raus
+        if (idx == null) return;
 
         vehicles.RemoveVehicle(all[idx.Value].Id);
         PrintSuccess("Fahrzeug gelöscht.");
@@ -405,7 +401,7 @@ internal static class Program
     }
 
     // =========================
-    // Fahrtenbuch (Option A+B+D) + FIX
+    // Fahrtenbuch
     // =========================
 
     private static void RunTripLogMenu(UserService users, VehicleService vehicles, TripLogService trips)
@@ -524,8 +520,6 @@ internal static class Program
         ConsoleInput.Pause();
     }
 
-    // FIX: Nach "Fahrten anzeigen" NICHT automatisch neue Fahrt starten.
-    // Zusätzlich: Nutzer/Fahrzeug-Auswahl kann jetzt mit 0 abgebrochen werden.
     private static void TripEntryWorkflow(UserService users, VehicleService vehicles, TripLogService trips, bool preferReuse)
     {
         var reuse = preferReuse;
@@ -549,23 +543,18 @@ internal static class Program
                 return;
             }
 
-            // Nutzer wählen (Option D) + Abbrechen möglich
             var userId = ResolveUserIdOrCancel(allUsers, reuse);
             if (userId is null) return;
 
-            // Fahrzeug wählen (Option D) + Abbrechen möglich
             var vehicleId = ResolveVehicleIdOrCancel(allVehicles, reuse);
             if (vehicleId is null) return;
 
-            // Datum (Enter = heute)
             var date = ReadDateOnlyWithDefault("Datum (Enter = heute)", DateOnly.FromDateTime(DateTime.Today));
 
-            // Grund (Enter = letzter Grund, falls vorhanden)
             var reason = ReadStringWithDefault(
                 _lastTripReason is { Length: > 0 } ? $"Grund (Enter = letzter: \"{_lastTripReason}\")" : "Grund",
                 _lastTripReason);
 
-            // Kilometer
             var km = ConsoleInput.ReadDecimal("Kilometer", 0.1m, 1_000_000m);
 
             try
@@ -581,7 +570,6 @@ internal static class Program
                 Console.WriteLine("✅ Fahrt gespeichert.");
                 Console.ResetColor();
 
-                // Option A: Next-Action Menü (bleibt hier)
                 while (true)
                 {
                     Console.WriteLine();
@@ -599,29 +587,24 @@ internal static class Program
                     if (next == 1)
                     {
                         reuse = true;
-                        break; // -> neue Fahrt starten
+                        break;
                     }
 
                     if (next == 2)
                     {
                         reuse = false;
-                        break; // -> neue Fahrt starten
+                        break;
                     }
 
-                    // next == 3
-                    // FIX: Anzeigen und danach zurück ins Next-Action-Menü,
-                    // NICHT automatisch neue Fahrt starten.
                     ShowTrips(users, vehicles, trips);
-                    // danach bleibt man im Next-Action-Menü (while true)
                 }
 
-                // kommt hierher nur bei 1 oder 2 -> nächste Runde der äußeren while(true)
                 continue;
             }
             catch (DomainValidationException ex)
             {
                 PrintError(ex.Message);
-                reuse = true; // beim Retry möglichst nicht alles neu auswählen müssen
+                reuse = true;
             }
         }
     }
@@ -739,7 +722,6 @@ internal static class Program
         return trips.GetByDateRange(from, to);
     }
 
-    // ===== Abbrechen-fähige Auswahl (0 = Abbrechen) =====
     private static int ChooseFromListOrCancel(string title, System.Collections.Generic.List<string> items)
     {
         Console.WriteLine(title);
@@ -752,7 +734,6 @@ internal static class Program
         return choice == 0 ? -1 : choice - 1;
     }
 
-    // ===== Option D (Reuse) + Abbrechen =====
     private static Guid? ResolveUserIdOrCancel(System.Collections.Generic.IReadOnlyList<Fuhrpark.Domain.Entities.User> allUsers, bool allowReuse)
     {
         if (allowReuse && _lastTripUserId.HasValue)
@@ -783,7 +764,6 @@ internal static class Program
         return allVehicles[idx].Id;
     }
 
-    // ===== Eingabe-Helpers =====
     private static bool ReadYesNo(string question, bool defaultYes)
     {
         while (true)
@@ -849,13 +829,12 @@ internal static class Program
             Console.ResetColor();
         }
     }
-    // Erfasst eine neue Reparatur für ein ausgewähltes Fahrezug
+    // Erfasst eine neue Reparatur
     private static void AddRepairWorkflow(VehicleService vehicles)
     {
         Console.Clear();
         PrintHeader("Reparatur eintragen");
 
-        // Lädt alle Fahrzeuge
         var all = vehicles.GetAll();
         if (all.Count == 0)
         {
@@ -863,17 +842,14 @@ internal static class Program
             return;
         }
 
-        // Fahrzeug auswählen
         var display = all.Select(v => $"{v.LicensePlate,-10} | {v.Brand} {v.Model}").ToList();
         var idx = ConsoleInput.ChooseFromListOrBack("Fahrzeug auswählen:", display);
         if (idx == null) return;
 
         var vehicle = all[idx.Value];
 
-        // Datum
         var date = ReadDateOnlyWithDefault("Datum (Enter = heute)", DateOnly.FromDateTime(DateTime.Today));
 
-        // Reparatur-Typ
         Console.WriteLine();
         Console.WriteLine("Art der Reparatur:");
         Console.WriteLine("1) Schadensbehebung");
@@ -885,21 +861,17 @@ internal static class Program
 
         var repairType = typeChoice.Value == 1 ? RepairType.Damage : RepairType.WearPart;
 
-        // Beschreibung
         var description = ConsoleInput.ReadRequiredOrBack("Beschreibung");
         if (description == null) return;
 
-        // Kosten
         var cost = ConsoleInput.ReadDecimalOrBack("Kosten (€)", 0.01m, 1_000_000m);
         if (cost == null) return;
 
-        // Werkstatt
         var workshop = ConsoleInput.ReadRequiredOrBack("Werkstatt/Durchgeführt von");
         if (workshop == null) return;
 
         try
         {
-            //übergibt die Reparaturdaten an den Service und speichert sie im Fahrzeug
             vehicles.AddRepair(vehicle.Id, date, description, repairType, cost.Value, workshop);
             PrintSuccess("Reparatur eingetragen.");
         }
@@ -909,7 +881,6 @@ internal static class Program
         }
     }
 
-    // Zeigt alle Reparaturen eines Fahrzeugs in chronologischer Reihnfolge an
     private static void ShowRepairBookWorkflow(VehicleService vehicles)
     {
         Console.Clear();
@@ -939,7 +910,6 @@ internal static class Program
         }
 
         Console.WriteLine();
-        // Sortiert Ausgabe aller Reperaturen nach Datum
         foreach (var repair in vehicle.Repairs.OrderBy(r => r.Date))
             Console.WriteLine(repair);
 
@@ -951,7 +921,6 @@ internal static class Program
         ConsoleInput.Pause();
     }
 
-    // Ermöglicht das löschen einer Reparatur anhand einer verkürzten id
     private static void DeleteRepairWorkflow(VehicleService vehicles)
     {
         while (true)
@@ -982,7 +951,6 @@ internal static class Program
             Console.WriteLine();
             Console.WriteLine($"Reparaturen für {vehicle.LicensePlate}:");
             Console.WriteLine();
-            // Anzeige aller Reparaturen des ausgewählten Fahrzeugs
             foreach (var repair in vehicle.Repairs.OrderBy(r => r.Date))
                 Console.WriteLine(repair);
 
@@ -990,7 +958,6 @@ internal static class Program
             var idStart = ConsoleInput.ReadRequiredOrBack("Id-Start der zu löschenden Reparatur (z.B. 1a2b3c4d)");
             if (idStart == null) return;
 
-            // Sucht die Reparatur anhand des Id-Anfangs zur besseren Benutzerfreundlichkeit
             var match = vehicle.Repairs.FirstOrDefault(r =>
                 r.Id.ToString().StartsWith(idStart, StringComparison.OrdinalIgnoreCase));
 

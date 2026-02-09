@@ -7,7 +7,6 @@ public static class ConsoleInput
         => string.Equals(input?.Trim(), "0", StringComparison.OrdinalIgnoreCase)
         || string.Equals(input?.Trim(), "q", StringComparison.OrdinalIgnoreCase);
 
-    // ===== Bestehende Methoden (ohne "Zurück") =====
 
     public static string ReadRequired(string label)
     {
@@ -67,7 +66,6 @@ public static class ConsoleInput
         Console.ReadLine();
     }
 
-    // ===== Neue Methoden (MIT "Zurück") =====
 
     public static string? ReadRequiredOrBack(string label)
     {

@@ -79,7 +79,6 @@ public sealed class VehicleService
 
         vehicle.AddDepreciation(amount, reason);
 
-        // wichtig: Änderungen persistieren
         _vehicles.Update(vehicle);
     }
 

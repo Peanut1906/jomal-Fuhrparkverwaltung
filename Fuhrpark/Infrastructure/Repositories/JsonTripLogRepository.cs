@@ -64,7 +64,7 @@ public sealed class JsonTripLogRepository : ITripLogRepository
 			{
 				try
 				{
-					// wir speichern als "yyyy-MM-dd"
+					//"yyyy-MM-dd"
 					if (!DateOnly.TryParseExact(dto.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture,
 							DateTimeStyles.None, out var date))
 						continue;
@@ -73,7 +73,6 @@ public sealed class JsonTripLogRepository : ITripLogRepository
 				}
 				catch
 				{
-					// kaputten Eintrag ignorieren
 				}
 			}
 
